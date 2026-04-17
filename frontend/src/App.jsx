@@ -105,10 +105,38 @@ function App() {
   return (
     <div className="min-h-screen px-4 py-8 sm:px-6 lg:px-10">
       <div className="mx-auto max-w-7xl">
-      
-       
+        <div className="mb-8 rounded-[28px] bg-ink px-6 py-8 text-paper shadow-card sm:px-8">
+          <p className="mb-3 text-sm uppercase tracking-[0.3em] text-orange-200">
+            Stock Control Case Study
+          </p>
+          <h1 className="font-display text-4xl leading-tight sm:text-5xl">
+            Inventory with stock alerts and transfer suggestions
+          </h1>
+          <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-200 sm:text-base">
+            This dashboard shows products, compares stock between two warehouses,
+            and helps you transfer stock when one side has a shortage.
+          </p>
+        </div>
 
-            {isLoading && products.length === 0 ? (
+        <div className="grid gap-6 lg:grid-cols-[1.5fr_0.8fr]">
+          <section className="rounded-[28px] border border-slate-200 bg-white/85 p-4 shadow-card backdrop-blur sm:p-6">
+            <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 className="font-display text-2xl text-ink">Products</h2>
+                <p className="text-sm text-slate-600">
+                  Warehouse A and Warehouse B stock in one table
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={loadData}
+                className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-accentDark"
+              >
+                Refresh
+              </button>
+            </div>
+
+            {loading ? (
               <p className="rounded-2xl bg-paper p-4 text-sm text-slate-600">
                 Loading products...
               </p>
@@ -256,22 +284,22 @@ function App() {
 
               <button
                 type="submit"
-                disabled={transferMutation.isPending}
+                disabled={submitting}
                 className="w-full rounded-2xl bg-ink px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
               >
-                {transferMutation.isPending ? "Submitting..." : "Submit Transfer"}
+                {submitting ? "Submitting..." : "Submit Transfer"}
               </button>
             </form>
 
-            {localMessage ? (
+            {message ? (
               <div className="mt-4 rounded-2xl bg-green-100 px-4 py-3 text-sm text-green-700">
-                {localMessage}
+                {message}
               </div>
             ) : null}
 
-            {globalError ? (
+            {error ? (
               <div className="mt-4 rounded-2xl bg-red-100 px-4 py-3 text-sm text-red-700">
-                {globalError}
+                {error}
               </div>
             ) : null}
 
