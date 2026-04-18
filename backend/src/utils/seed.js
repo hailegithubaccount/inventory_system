@@ -23,49 +23,56 @@ const products = [
 
 const stockRows = [
   { product_id: 1, warehouse_id: 1, quantity: 4, reorder_level: 10 },
-  { product_id: 1, warehouse_id: 2, quantity: 7, reorder_level: 10 },
+  { product_id: 1, warehouse_id: 2, quantity: 35, reorder_level: 10 },
   { product_id: 2, warehouse_id: 1, quantity: 25, reorder_level: 10 },
-  { product_id: 2, warehouse_id: 2, quantity: 18, reorder_level: 10 },
+  { product_id: 2, warehouse_id: 2, quantity: 5, reorder_level: 10 },
   { product_id: 3, warehouse_id: 1, quantity: 40, reorder_level: 8 },
-  
-  
+  { product_id: 3, warehouse_id: 2, quantity: 2, reorder_level: 8 },
+  { product_id: 4, warehouse_id: 1, quantity: 6, reorder_level: 15 },
+  { product_id: 4, warehouse_id: 2, quantity: 45, reorder_level: 15 },
 ];
 
 export const ensureSeedData = async () => {
-  const [existingCategories, existingWarehouses, existingProducts, existingStock] = await Promise.all([
-    Category.findAll({ attributes: ["id"] }),
-    Warehouse.findAll({ attributes: ["id"] }),
-    Product.findAll({ attributes: ["id"] }),
-    Stock.findAll({ attributes: ["product_id", "warehouse_id"] }),
-  ]);
-
-  const categoryIds = new Set(existingCategories.map((item) => item.id));
-  const warehouseIds = new Set(existingWarehouses.map((item) => item.id));
-  const productIds = new Set(existingProducts.map((item) => item.id));
-  const stockKeys = new Set(
-    existingStock.map((item) => `${item.product_id}-${item.warehouse_id}`)
-  );
-
-  const missingCategories = categories.filter((item) => !categoryIds.has(item.id));
-  const missingWarehouses = warehouses.filter((item) => !warehouseIds.has(item.id));
-  const missingProducts = products.filter((item) => !productIds.has(item.id));
-  const missingStock = stockRows.filter(
-    (item) => !stockKeys.has(`${item.product_id}-${item.warehouse_id}`)
-  );
-
-  if (missingCategories.length > 0) {
-    await Category.bulkCreate(missingCategories);
+  // 1. Categories
+  for (const cat of categories) {
+    await Category.findOrCreate({
+      where: { id: cat.id },
+      defaults: cat,
+    });
   }
 
-  if (missingWarehouses.length > 0) {
-    await Warehouse.bulkCreate(missingWarehouses);
+  // 2. Warehouses
+  for (const wh of warehouses) {
+    await Warehouse.findOrCreate({
+      where: { id: wh.id },
+      defaults: wh,
+    });
   }
 
-  if (missingProducts.length > 0) {
-    await Product.bulkCreate(missingProducts);
+  // 3. Products
+  for (const prod of products) {
+    await Product.findOrCreate({
+      where: { id: prod.id },
+      defaults: prod,
+    });
   }
 
-  if (missingStock.length > 0) {
-    await Stock.bulkCreate(missingStock);
+  // 4. Stock (Force update quantities from seed)
+  for (const row of stockRows) {
+    const [stock, created] = await Stock.findOrCreate({
+      where: {
+        product_id: row.product_id,
+        warehouse_id: row.warehouse_id,
+      },
+      defaults: row,
+    });
+
+    if (!created) {
+      // If already exists, update it to match the seed file
+      await stock.update({
+        quantity: row.quantity,
+        reorder_level: row.reorder_level,
+      });
+    }
   }
 };

@@ -28,6 +28,8 @@ function App() {
 
   const {
     data: shortages = [],
+    isError: isErrorShortages,
+    error: shortagesError,
     refetch: refetchShortages,
   } = useShortagesQuery();
 
@@ -100,7 +102,11 @@ function App() {
   };
 
   const isLoading = isLoadingProducts || transferMutation.isPending;
-  const globalError = isErrorProducts ? productsError.message : localError;
+  const globalError = isErrorProducts 
+    ? (productsError.response?.data?.error || productsError.message)
+    : isErrorShortages 
+      ? (shortagesError.response?.data?.error || shortagesError.message)
+      : localError;
 
   return (
     <div className="min-h-screen px-4 py-8 sm:px-6 lg:px-10">

@@ -1,4 +1,8 @@
+import { sequelize } from "../config/db.js";
+
 export const getShortages = async (req, res) => {
+  console.log("Checking sequelize instance:", typeof sequelize);
+  
   try {
     const [data] = await sequelize.query(`
       SELECT 
@@ -16,31 +20,30 @@ export const getShortages = async (req, res) => {
         wb.name AS warehouse_b_name,
 
         -- Status
-        IF(
-          COALESCE(sA.quantity,0) < COALESCE(sA.reorder_level,0) OR
-          COALESCE(sB.quantity,0) < COALESCE(sB.reorder_level,0),
-          'Shortage',
-          'OK'
-        ) AS status,
+        CASE 
+          WHEN (COALESCE(sA.quantity,0) < COALESCE(sA.reorder_level,0) OR COALESCE(sB.quantity,0) < COALESCE(sB.reorder_level,0)) 
+          THEN 'Shortage' 
+          ELSE 'OK' 
+        END AS status,
 
         -- Suggested transfer
         CASE
-          WHEN sA.quantity < sA.reorder_level AND sB.quantity > sB.reorder_level THEN 2
-          WHEN sB.quantity < sB.reorder_level AND sA.quantity > sA.reorder_level THEN 1
-        END AS from_warehouse_id,
+          WHEN COALESCE(sA.quantity,0) < COALESCE(sA.reorder_level,0) AND COALESCE(sB.quantity,0) > COALESCE(sB.reorder_level,0) THEN 2
+          WHEN COALESCE(sB.quantity,0) < COALESCE(sB.reorder_level,0) AND COALESCE(sA.quantity,0) > COALESCE(sA.reorder_level,0) THEN 1
+        END AS suggested_from_warehouse_id,
 
         CASE
-          WHEN sA.quantity < sA.reorder_level AND sB.quantity > sB.reorder_level THEN 1
-          WHEN sB.quantity < sB.reorder_level AND sA.quantity > sA.reorder_level THEN 2
-        END AS to_warehouse_id,
+          WHEN COALESCE(sA.quantity,0) < COALESCE(sA.reorder_level,0) AND COALESCE(sB.quantity,0) > COALESCE(sB.reorder_level,0) THEN 1
+          WHEN COALESCE(sB.quantity,0) < COALESCE(sB.reorder_level,0) AND COALESCE(sA.quantity,0) > COALESCE(sA.reorder_level,0) THEN 2
+        END AS suggested_to_warehouse_id,
 
         -- Quantity
         CASE
-          WHEN sA.quantity < sA.reorder_level AND sB.quantity > sB.reorder_level
-            THEN LEAST(sA.reorder_level - sA.quantity, sB.quantity - sB.reorder_level)
+          WHEN COALESCE(sA.quantity,0) < COALESCE(sA.reorder_level,0) AND COALESCE(sB.quantity,0) > COALESCE(sB.reorder_level,0)
+            THEN LEAST(COALESCE(sA.reorder_level,0) - COALESCE(sA.quantity,0), COALESCE(sB.quantity,0) - COALESCE(sB.reorder_level,0))
 
-          WHEN sB.quantity < sB.reorder_level AND sA.quantity > sA.reorder_level
-            THEN LEAST(sB.reorder_level - sB.quantity, sA.quantity - sA.reorder_level)
+          WHEN COALESCE(sB.quantity,0) < COALESCE(sB.reorder_level,0) AND COALESCE(sA.quantity,0) > COALESCE(sA.reorder_level,0)
+            THEN LEAST(COALESCE(sB.reorder_level,0) - COALESCE(sB.quantity,0), COALESCE(sA.quantity,0) - COALESCE(sA.reorder_level,0))
 
           ELSE 0
         END AS suggested_quantity
@@ -60,6 +63,7 @@ export const getShortages = async (req, res) => {
 
     res.json(data);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("REPORT ERROR:", err);
+    res.status(500).json({ error: err.message || "Internal Server Error" });
   }
 };
