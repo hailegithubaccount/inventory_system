@@ -21,7 +21,7 @@ export const useTransferMutation = () => {
   return useMutation({
     mutationFn: inventoryService.transferStock,
     onSuccess: () => {
-      // Invalidate queries to trigger a refetch of fresh data
+      
       queryClient.invalidateQueries({ queryKey: ["products"] });
       queryClient.invalidateQueries({ queryKey: ["shortages"] });
     },

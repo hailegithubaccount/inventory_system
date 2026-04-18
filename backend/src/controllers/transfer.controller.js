@@ -61,7 +61,6 @@ export const transferStock = async (req, res) => {
         from_warehouse_id,
         to_warehouse_id,
         quantity: Number(quantity),
-        type: "out",
       },
       { transaction }
     );
@@ -72,7 +71,6 @@ export const transferStock = async (req, res) => {
         from_warehouse_id,
         to_warehouse_id,
         quantity: Number(quantity),
-        type: "in",
       },
       { transaction }
     );

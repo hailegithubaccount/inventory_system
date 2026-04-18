@@ -22,7 +22,7 @@ const start = async () => {
       console.log(`Server running on http://localhost:${port}`);
     });
   } catch (error) {
-    console.error("Could not start server:", error.message);
+    console.error("Could not start server:", error.message || error);
   }
 };
 

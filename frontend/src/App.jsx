@@ -129,14 +129,14 @@ function App() {
               </div>
               <button
                 type="button"
-                onClick={loadData}
+                onClick={handleRefresh}
                 className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-accentDark"
               >
                 Refresh
               </button>
             </div>
 
-            {loading ? (
+            {isLoading ? (
               <p className="rounded-2xl bg-paper p-4 text-sm text-slate-600">
                 Loading products...
               </p>
@@ -284,22 +284,22 @@ function App() {
 
               <button
                 type="submit"
-                disabled={submitting}
+                disabled={transferMutation.isPending}
                 className="w-full rounded-2xl bg-ink px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
               >
-                {submitting ? "Submitting..." : "Submit Transfer"}
+                {transferMutation.isPending ? "Submitting..." : "Submit Transfer"}
               </button>
             </form>
 
-            {message ? (
+            {localMessage ? (
               <div className="mt-4 rounded-2xl bg-green-100 px-4 py-3 text-sm text-green-700">
-                {message}
+                {localMessage}
               </div>
             ) : null}
 
-            {error ? (
+            {globalError ? (
               <div className="mt-4 rounded-2xl bg-red-100 px-4 py-3 text-sm text-red-700">
-                {error}
+                {globalError}
               </div>
             ) : null}
 

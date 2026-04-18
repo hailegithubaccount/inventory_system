@@ -18,35 +18,17 @@ const products = [
   { id: 2, name: "Wireless Mouse", category_id: 1 },
   { id: 3, name: "USB-C Hub", category_id: 1 },
   { id: 4, name: "Cotton T-Shirt (L)", category_id: 2 },
-  { id: 5, name: "Denim Jeans (32)", category_id: 2 },
-  { id: 6, name: "Basmati Rice (5kg)", category_id: 3 },
-  { id: 7, name: "Olive Oil (1L)", category_id: 3 },
-  { id: 8, name: "Cordless Drill", category_id: 4 },
-  { id: 9, name: "Wrench Set", category_id: 4 },
-  { id: 10, name: "A4 Paper (500 sheets)", category_id: 5 },
+  
 ];
 
 const stockRows = [
   { product_id: 1, warehouse_id: 1, quantity: 4, reorder_level: 10 },
-  { product_id: 1, warehouse_id: 2, quantity: 35, reorder_level: 10 },
+  { product_id: 1, warehouse_id: 2, quantity: 7, reorder_level: 10 },
   { product_id: 2, warehouse_id: 1, quantity: 25, reorder_level: 10 },
   { product_id: 2, warehouse_id: 2, quantity: 18, reorder_level: 10 },
   { product_id: 3, warehouse_id: 1, quantity: 40, reorder_level: 8 },
-  { product_id: 3, warehouse_id: 2, quantity: 3, reorder_level: 8 },
-  { product_id: 4, warehouse_id: 1, quantity: 6, reorder_level: 15 },
-  { product_id: 4, warehouse_id: 2, quantity: 45, reorder_level: 15 },
-  { product_id: 5, warehouse_id: 1, quantity: 20, reorder_level: 10 },
-  { product_id: 5, warehouse_id: 2, quantity: 22, reorder_level: 10 },
-  { product_id: 6, warehouse_id: 1, quantity: 8, reorder_level: 20 },
-  { product_id: 6, warehouse_id: 2, quantity: 65, reorder_level: 20 },
-  { product_id: 7, warehouse_id: 1, quantity: 3, reorder_level: 15 },
-  { product_id: 7, warehouse_id: 2, quantity: 5, reorder_level: 15 },
-  { product_id: 8, warehouse_id: 1, quantity: 12, reorder_level: 10 },
-  { product_id: 8, warehouse_id: 2, quantity: 14, reorder_level: 10 },
-  { product_id: 9, warehouse_id: 1, quantity: 30, reorder_level: 10 },
-  { product_id: 9, warehouse_id: 2, quantity: 2, reorder_level: 10 },
-  { product_id: 10, warehouse_id: 1, quantity: 50, reorder_level: 100 },
-  { product_id: 10, warehouse_id: 2, quantity: 300, reorder_level: 100 },
+  
+  
 ];
 
 export const ensureSeedData = async () => {

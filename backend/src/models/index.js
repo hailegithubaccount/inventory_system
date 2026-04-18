@@ -119,10 +119,6 @@ export const StockMovement = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    type: {
-      type: DataTypes.ENUM("in", "out", "transfer"),
-      allowNull: false,
-    },
   },
   {
     tableName: "stock_movements",
@@ -130,7 +126,7 @@ export const StockMovement = sequelize.define(
   }
 );
 
-// Relationships
+
 Category.hasMany(Product, { foreignKey: "category_id" });
 Product.belongsTo(Category, { foreignKey: "category_id" });
 

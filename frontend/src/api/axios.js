@@ -8,11 +8,11 @@ const axiosInstance = axios.create({
   },
 });
 
-// Response interceptor for global error handling
+
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Log error or handle globablly (like showing a toast)
+    
     console.error("API Error:", error.response?.data || error.message);
     return Promise.reject(error);
   }
