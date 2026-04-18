@@ -43,12 +43,6 @@ function App() {
     }, {});
   }, [shortages]);
 
-  const handleRefresh = () => {
-    refetchProducts();
-    refetchShortages();
-    setLocalMessage("");
-    setLocalError("");
-  };
 
   const handleSuggestTransfer = (productId) => {
     const shortage = shortageMap[productId];
@@ -133,13 +127,6 @@ function App() {
                   Warehouse A and Warehouse B stock in one table
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={handleRefresh}
-                className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-accentDark"
-              >
-                Refresh
-              </button>
             </div>
 
             {isLoading ? (
